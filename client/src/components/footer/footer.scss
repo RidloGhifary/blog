@@ -1,0 +1,99 @@
+@import "../../App.scss";
+
+$color_5: #909090;
+
+footer {
+  background-color: white;
+  color: black;
+  height: auto;
+  padding-top: 40px;
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  h1 {
+    font-size: 2.1rem;
+    font-weight: 900;
+    font-size: 48px;
+    text-transform: capitalize;
+    line-height: 3rem;
+  }
+  p {
+    max-width: 500px;
+    margin: 10px auto;
+    line-height: 28px;
+    font-size: 14px;
+  }
+
+  @include apply-styles(small) {
+    padding: 10px;
+  }
+}
+.socials {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0 3rem 0;
+  li {
+    margin: 0 10px;
+  }
+}
+.footer-bottom {
+  padding: 20px;
+  padding-bottom: 40px;
+  text-align: center;
+  p {
+    float: left;
+    font-size: 14px;
+    word-spacing: 2px;
+    text-transform: capitalize;
+    a {
+      color: $primaryColor;
+      font-weight: 800;
+      font-size: 16px;
+      text-decoration: none;
+    }
+  }
+  span {
+    text-transform: uppercase;
+    opacity: 0.4;
+    font-weight: 200;
+  }
+
+  @include apply-styles(small) {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+}
+
+.footer-menu {
+  float: right;
+  ul {
+    display: flex;
+    li {
+      padding-right: 10px;
+      display: block;
+      a {
+        color: $color_5;
+        text-decoration: none;
+        &:hover {
+          color: $primaryColor;
+        }
+      }
+    }
+  }
+}
+
+footer.dark {
+  background-color: $primaryBlack;
+  color: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
