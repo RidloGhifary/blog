@@ -3,6 +3,7 @@ import Home from "./pages/Home/Home.jsx";
 import Navbar from "./components/navbar/Navbar.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import Login from "./pages/Login/Login.jsx";
+import Register from "./pages/Register/Register.jsx";
 
 const Layout = () => {
   return (
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <div>Register</div>,
+    element: <Register />,
   },
 ]);
 
