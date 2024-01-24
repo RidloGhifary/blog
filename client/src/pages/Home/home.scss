@@ -1,0 +1,85 @@
+@import "../../App.scss";
+
+.home {
+  padding: 24px 8px;
+  padding-bottom: 50px;
+
+  .container {
+    margin: 0 auto;
+    max-width: 1024px;
+
+    .posts {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+
+      .post {
+        width: 100%;
+        img {
+          width: 100%;
+          height: 400px;
+          object-fit: cover;
+          object-position: center;
+          @include boxShadow();
+
+          @include apply-styles(small) {
+            height: 250px;
+          }
+        }
+
+        .title {
+          display: block;
+          font-size: 38px;
+          font-weight: 800;
+          margin: 10px 0;
+
+          @include apply-styles(small) {
+            font-size: 30px;
+          }
+        }
+
+        p {
+          color: $primaryBlack;
+          line-height: 25px;
+          margin-bottom: 20px;
+
+          @include apply-styles(small) {
+            font-size: 14px;
+          }
+        }
+
+        .button {
+          background-color: $primaryColor;
+          border: 1px solid $primaryColor;
+          color: white;
+          padding: 8px 26px;
+          font-weight: 600;
+          @include borderRadius(8px);
+          @include transition();
+
+          &:hover {
+            @include buttonHover();
+          }
+        }
+      }
+    }
+  }
+}
+
+.home.dark {
+  background-color: $primaryBlack;
+  color: white;
+
+  .container {
+    .posts {
+      .post {
+        img {
+          @include boxShadowLight();
+        }
+        p {
+          color: white;
+        }
+      }
+    }
+  }
+}
