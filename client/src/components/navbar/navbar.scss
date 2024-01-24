@@ -1,0 +1,199 @@
+@import "../../App.scss";
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+
+  .title {
+    font-size: 28px;
+    font-weight: 900;
+    // color: $primaryColor;
+  }
+
+  .listItem {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    .categories {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    @include apply-styles(large) {
+      .dashboard {
+        display: block;
+      }
+      .categories {
+        display: none;
+      }
+    }
+
+    @include apply-styles(small) {
+      .dashboard {
+        display: none;
+      }
+    }
+
+    .mobileToggle {
+      display: none;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      .name {
+        font-weight: 600;
+        cursor: pointer;
+        color: $primaryColor;
+      }
+      .img {
+        width: 45px;
+        height: 45px;
+        overflow: hidden;
+        @include borderRadius(50px);
+        @include boxShadow();
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+
+    .write {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .auth {
+      font-weight: 600;
+      background-color: $primaryColor;
+      color: white;
+      padding: 8px 18px;
+      border: 1px solid $primaryColor;
+      @include borderRadius(8px);
+      @include boxShadow();
+      @include transition();
+
+      &:hover {
+        @include buttonHover();
+      }
+    }
+  }
+}
+
+.mobileNavbar {
+  display: none;
+}
+
+@include apply-styles(small) {
+  .navbar {
+    .listItem.right {
+      .auth {
+        display: none;
+      }
+      .mobileToggle {
+        display: block;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .mobileNavbar {
+    display: block;
+    width: 100%;
+    position: fixed;
+    // bottom: 0;
+    left: 0;
+    padding: 40px 20px;
+    background-color: $primaryColor;
+    border-top-right-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-top-right-radius: 10px;
+    -ms-border-top-right-radius: 10px;
+    -o-border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-top-left-radius: 10px;
+    -ms-border-top-left-radius: 10px;
+    -o-border-top-left-radius: 10px;
+    color: white;
+    @include transition();
+
+    .listItem {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      align-items: center;
+
+      .button-auth {
+        width: 80%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        .auth {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          font-weight: 600;
+          font-weight: 600;
+          background-color: $primaryColor;
+          color: white;
+          padding: 8px 18px;
+          border: 1px solid $primaryColor;
+          @include borderRadius(8px);
+          @include boxShadow();
+          @include transition();
+
+          &:hover {
+            @include buttonHover();
+          }
+        }
+      }
+
+      .categories {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        // gap: 15px;
+        margin-top: 20px;
+        .cat {
+          text-align: center;
+          width: 100%;
+          padding: 28px;
+          &:first-child {
+            border-bottom: 1px solid white;
+          }
+          &:last-child {
+            border-top: 1px solid white;
+          }
+        }
+      }
+    }
+  }
+}
+
+.navbar.dark {
+  background-color: $primaryBlack;
+  color: white;
+  @include boxShadowLight();
+}
+
+.mobileNavbar.dark {
+  background-color: $primaryBlack;
+  color: white;
+  @include boxShadowLight();
+}
