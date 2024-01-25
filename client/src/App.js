@@ -5,6 +5,7 @@ import Footer from "./components/footer/Footer.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Register from "./pages/Register/Register.jsx";
 import Write from "./pages/Write/Write.jsx";
+import Readme from "./pages/Readme/Readme.jsx";
 
 const Layout = () => {
   return (
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/readme/:id", element: <h1>Hallo</h1> },
+      { path: "/readme/:id", element: <Readme /> },
       { path: "/write", element: <Write /> },
       { path: "/profile", element: <h1>Profile</h1> },
     ],

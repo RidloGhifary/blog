@@ -1,0 +1,198 @@
+@import "../../App.scss";
+
+.readme {
+  background-color: white;
+  color: $primaryBlack;
+  padding: 40px 10px;
+
+  .readmeContainer {
+    max-width: 1024px;
+    margin: 0 auto;
+
+    .imageContainer {
+      width: 100%;
+      height: 400px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        @include borderRadius(8px);
+      }
+    }
+
+    .writer {
+      margin: 30px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        object-position: center;
+        @include borderRadius(50px);
+      }
+
+      .username {
+        font-weight: 600;
+      }
+      .date {
+        font-weight: 300;
+        font-style: italic;
+        font-size: 14px;
+      }
+    }
+
+    .buttonAction {
+      margin-left: 50px;
+      .edit {
+        margin: 0 10px;
+        background-color: $primaryColor;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        @include borderRadius(8px);
+        cursor: pointer;
+        border: 1px solid $primaryColor;
+        font-weight: 600;
+        &:hover {
+          @include buttonHover();
+        }
+      }
+      .delete {
+        @extend .edit;
+      }
+
+      @include apply-styles(small) {
+        margin-left: 10px;
+        display: flex;
+        gap: 8px;
+        .edit {
+          margin: 0 4px;
+        }
+      }
+    }
+
+    .writerContent {
+      .title {
+        margin: 30px 0;
+        font-size: 48px;
+        text-align: center;
+      }
+
+      .writerMainContent {
+        line-height: 30px;
+        text-align: justify;
+      }
+    }
+
+    .commentSection {
+      margin-top: 50px;
+      margin: 30px 0;
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        img {
+          width: 50px;
+          height: 50px;
+          @include borderRadius(50px);
+          object-fit: cover;
+          object-position: center;
+        }
+        p {
+          font-weight: 600;
+        }
+      }
+
+      p {
+        margin: 30px 0;
+      }
+
+      .formComment {
+        display: flex;
+        gap: 10px;
+        input[type="text"] {
+          flex: 5;
+          border: none;
+          outline: none;
+          padding: 20px;
+          background-color: transparent;
+          @include borderRadius(8px);
+          border: 1px solid black;
+        }
+        button {
+          flex: 1;
+          border: none;
+          background-color: $primaryColor;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          @include borderRadius(8px);
+        }
+
+        @include apply-styles(medium) {
+          flex-direction: column;
+          button {
+            padding: 20px;
+          }
+        }
+      }
+
+      .listComments {
+        .userComment {
+          padding: 10px;
+          margin: 20px 0;
+          display: flex;
+          gap: 15px;
+          img {
+            width: 50px;
+            height: 50px;
+            @include borderRadius(50px);
+            object-fit: cover;
+            object-position: center;
+          }
+          .commentInfo {
+            .userCommentInfo {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              .name {
+                font-weight: 600;
+                font-size: 18px;
+              }
+              .date {
+                color: gray;
+                font-size: 12px;
+              }
+            }
+            .comment {
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include apply-styles(medium) {
+    padding: 40px 28px;
+  }
+}
+
+.readme.dark {
+  background-color: $primaryBlack;
+  color: white;
+  .readmeContainer {
+    .commentSection {
+      .formComment {
+        input {
+          border: 1px solid white;
+          color: white;
+        }
+      }
+    }
+  }
+}
