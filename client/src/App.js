@@ -4,6 +4,7 @@ import Navbar from "./components/navbar/Navbar.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Register from "./pages/Register/Register.jsx";
+import Write from "./pages/Write/Write.jsx";
 
 const Layout = () => {
   return (
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/readme/:id", element: <h1>Hallo</h1> },
-      { path: "/write", element: <h1>Write</h1> },
+      { path: "/write", element: <Write /> },
       { path: "/profile", element: <h1>Profile</h1> },
     ],
   },
