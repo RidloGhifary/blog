@@ -10,18 +10,28 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 
 const defaultTheme = createTheme();
 
 export default function Register() {
-  const handleSubmit = (event) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const datas = {
       email: data.get("email"),
-      name: data.get("name"),
+      username: data.get("username"),
       password: data.get("password"),
-    });
+    };
+
+    try {
+      await axios.post(`${baseUrl}/auth/register`, datas);
+      alert("Register Success");
+    } catch (err) {
+      console.log(err.response.data);
+    }
   };
 
   return (
@@ -62,10 +72,10 @@ export default function Register() {
                 margin="normal"
                 required
                 fullWidth
-                id="name"
+                id="username"
                 label="User Name"
-                name="name"
-                autoComplete="name"
+                name="username"
+                autoComplete="username"
                 autoFocus
               />
               <TextField
