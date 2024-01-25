@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,17 +11,36 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
+import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const datas = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+
+    try {
+      await axios.post(`${baseUrl}/auth/login`, datas);
+      ToastSuccess.fire({
+        icon: "success",
+        title: "Signed up successfully",
+      });
+      navigate("/");
+    } catch (err) {
+      setError(err.response.data);
+      // console.log(err);
+    }
   };
 
   return (
@@ -59,6 +79,14 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+            {error && (
+              <Typography
+                component="p"
+                variant="p"
+                sx={{ color: "red", marginTop: "10px" }}>
+                {error}
+              </Typography>
+            )}
             <Box
               component="form"
               noValidate
