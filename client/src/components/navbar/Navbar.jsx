@@ -10,11 +10,13 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
 import "./navbar.scss";
 
 const Navbar = () => {
   const [showNavbarMobile, setShowNavbarMobile] = useState(false);
-  const { darkMode, currentMode } = useContext(DarkModeContext);
+  const { darkMode, currentMode, currentUser, logout } =
+    useContext(DarkModeContext);
   const mobileNavbarRef = useRef();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -24,6 +26,14 @@ const Navbar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    ToastSuccess.fire({
+      icon: "success",
+      title: "Log out successfully",
+    });
   };
 
   useEffect(() => {
@@ -113,12 +123,24 @@ const Navbar = () => {
               />
             </Link>
           </div>
-          <Link to={"/login"} className="auth">
-            Login
-          </Link>
-          <Link to={"/register"} className="auth">
-            Register
-          </Link>
+
+          {currentUser && (
+            <div className="userInfo">
+              <p>{currentUser.username}</p>
+              <button onClick={handleLogout} className="auth">
+                Logout
+              </button>
+            </div>
+          )}
+
+          <div style={{ display: currentUser ? "none" : "flex", gap: "8px" }}>
+            <Link to={"/login"} className="auth">
+              Login
+            </Link>
+            <Link to={"/register"} className="auth">
+              Register
+            </Link>
+          </div>
           <MenuIcon
             fontSize="large"
             className="mobileToggle"
@@ -136,7 +158,17 @@ const Navbar = () => {
           display: showNavbarMobile ? "block" : "none",
         }}>
         <div className="listItem">
-          <div className="button-auth">
+          {currentUser && (
+            <div className="button-auth">
+              <p>{currentUser.username}</p>
+              <button onClick={handleLogout} className="auth">
+                Logout
+              </button>
+            </div>
+          )}
+          <div
+            className="button-auth"
+            style={{ display: currentUser ? "none" : "flex" }}>
             <Link to={"/login"} className="auth">
               <LoginIcon />
               Login

@@ -84,9 +84,20 @@
       @include borderRadius(8px);
       @include boxShadow();
       @include transition();
+      cursor: pointer;
 
       &:hover {
         @include buttonHover();
+      }
+    }
+
+    .userInfo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      p {
+        font-weight: 700;
       }
     }
   }
@@ -100,6 +111,9 @@
   .navbar {
     .listItem.right {
       .auth {
+        display: none;
+      }
+      .userInfo {
         display: none;
       }
       .mobileToggle {
@@ -155,6 +169,7 @@
           @include borderRadius(8px);
           @include boxShadow();
           @include transition();
+          cursor: pointer;
 
           &:hover {
             @include buttonHover();

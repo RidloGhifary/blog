@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -11,16 +11,18 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
+// import axios from "axios";
 import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
+import { DarkModeContext } from "../../context/createContext";
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const baseUrl = process.env.REACT_APP_BASE_URL;
+  // const baseUrl = process.env.REACT_APP_BASE_URL;
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const { login } = useContext(DarkModeContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,7 +33,8 @@ export default function Login() {
     };
 
     try {
-      await axios.post(`${baseUrl}/auth/login`, datas);
+      // await axios.post(`${baseUrl}/auth/login`, datas);
+      await login(datas);
       ToastSuccess.fire({
         icon: "success",
         title: "Signed up successfully",
