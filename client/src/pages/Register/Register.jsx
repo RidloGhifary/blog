@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,11 +12,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
 
 const defaultTheme = createTheme();
 
 export default function Register() {
   const baseUrl = process.env.REACT_APP_BASE_URL;
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,9 +33,13 @@ export default function Register() {
 
     try {
       await axios.post(`${baseUrl}/auth/register`, datas);
-      alert("Register Success");
+      ToastSuccess.fire({
+        icon: "success",
+        title: "Signed up successfully",
+      });
+      navigate("/login");
     } catch (err) {
-      console.log(err.response.data);
+      setError(err.response.data);
     }
   };
 
@@ -53,6 +62,14 @@ export default function Register() {
             <Typography component="h1" variant="h5">
               Sign Up
             </Typography>
+            {error && (
+              <Typography
+                component="p"
+                variant="p"
+                sx={{ color: "red", marginTop: "10px" }}>
+                {error}
+              </Typography>
+            )}
             <Box
               component="form"
               noValidate
