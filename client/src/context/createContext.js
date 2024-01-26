@@ -4,7 +4,8 @@ import axios from "axios";
 export const DarkModeContext = createContext();
 
 export const DarkModeContextProvider = ({ children }) => {
-  const baseUrl = process.env.REACT_APP_BASE_URL;
+  // const baseUrl = process.env.REACT_APP_BASE_URL;
+  const currentPath = window.location.pathname;
 
   const [currentMode, setCurrentMode] = useState(
     JSON.parse(localStorage.getItem("darkmode")) || null
@@ -19,19 +20,25 @@ export const DarkModeContextProvider = ({ children }) => {
   };
 
   const login = async (inputs) => {
-    const res = await axios.post(`${baseUrl}/auth/login`, inputs);
+    const res = await axios.post(`/auth/login`, inputs);
     setCurrentUser(res.data);
   };
 
   const logout = async () => {
-    await axios.post(`${baseUrl}/auth/logout`);
+    await axios.post(`/auth/logout`);
     setCurrentUser(null);
   };
 
   useEffect(() => {
     localStorage.setItem("darkmode", JSON.stringify(currentMode));
     localStorage.setItem("user", JSON.stringify(currentUser));
-  }, [currentMode, currentUser]);
+
+    if (
+      (currentUser !== null && currentPath === "/login") ||
+      currentPath === "/register"
+    )
+      window.location.href = "/";
+  }, [currentMode, currentUser, currentPath]);
 
   return (
     <DarkModeContext.Provider

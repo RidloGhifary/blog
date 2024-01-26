@@ -32,7 +32,7 @@ export default function Register() {
     };
 
     try {
-      await axios.post(`${baseUrl}/auth/register`, datas);
+      await axios.post(`/auth/register`, datas);
       ToastSuccess.fire({
         icon: "success",
         title: "Signed up successfully",

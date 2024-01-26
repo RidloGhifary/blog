@@ -19,6 +19,8 @@ const Navbar = () => {
     useContext(DarkModeContext);
   const mobileNavbarRef = useRef();
 
+  // console.log(currentUser);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -29,11 +31,15 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
-    ToastSuccess.fire({
-      icon: "success",
-      title: "Log out successfully",
-    });
+    try {
+      await logout();
+      ToastSuccess.fire({
+        icon: "success",
+        title: "Log out successfully",
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

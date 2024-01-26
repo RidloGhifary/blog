@@ -1,12 +1,20 @@
 import express from "express";
 import authRouter from "./router/auth.js";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
+
+// const middleware = (req, res, next) => {
+//   if (req.cookies.access_token) {
+//     res.send(res.data);
+//     next();
+//   } else {
+//     res.send("You are not authenticated");
+//   }
+// };
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
 app.use("/api/auth", authRouter);
 
