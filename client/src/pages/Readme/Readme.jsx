@@ -5,6 +5,8 @@ import "./readme.scss";
 import Image from "../../resource/ganjar.jpeg";
 import Image2 from "../../resource/placeholder.jpeg";
 import axios from "axios";
+import DOMPurify from "dompurify";
+import moment from "moment";
 
 const Readme = () => {
   const [postData, setPostData] = useState({});
@@ -19,40 +21,52 @@ const Readme = () => {
       // console.log(postData);
     };
     fetchData();
-  }, [location]);
+  }, [location, postData]);
 
   const { currentMode } = useContext(DarkModeContext);
   return (
     <div className={`readme ${currentMode && "dark"}`}>
       <div className="readmeContainer">
         <div className="imageContainer">
-          <img src={postData.postImg || Image2} alt="imageContainer" />
+          <img
+            src={`../upload/${postData.postImg}` || Image2}
+            alt="imageContainer"
+          />
         </div>
         <div className="writer">
           <img src={postData.writerImg} alt="writerPhoto" />
           <div className="writerInfo">
             <p className="username">{postData.writername}</p>
-            <p className="date">Published 2 minutes ago</p>
+            <p className="date">Published {moment(postData.date).fromNow()}</p>
           </div>
-          <div
-            className="buttonAction"
-            style={{
-              display: currentUser.id === postData.userid ? "flex" : "none",
-            }}>
-            <button className="edit">Edit</button>
-            <button className="delete">Delete</button>
-          </div>
+          {currentUser && (
+            <div
+              className="buttonAction"
+              style={{
+                display: currentUser.id === postData.userid ? "flex" : "none",
+              }}>
+              <button className="edit">Edit</button>
+              <button className="delete">Delete</button>
+            </div>
+          )}
         </div>
         <div className="writerContent">
           <h1 className="title">{postData.title}</h1>
-          <div className="writerMainContent">{postData.description}</div>
+          <div className="writerMainContent">
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(postData.description),
+              }}></div>
+          </div>
         </div>
 
         <div className="commentSection">
-          <div className="user">
-            <img src={currentUser.img} alt="userIMage" />
-            <p>{currentUser.username}</p>
-          </div>
+          {currentUser && (
+            <div className="user">
+              <img src={currentUser.img} alt="userIMage" />
+              <p>{currentUser.username}</p>
+            </div>
+          )}
           <p>10 comments</p>
           <form className="formComment">
             <input type="text" placeholder="Your Comment" />

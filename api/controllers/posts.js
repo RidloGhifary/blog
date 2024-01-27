@@ -1,4 +1,5 @@
 import db from "../db.js";
+import jwt from "jsonwebtoken";
 
 export const getPosts = (req, res) => {
   const q = req.query.category
@@ -25,7 +26,88 @@ export const getSinglePost = (req, res) => {
   });
 };
 
-export const addPosts = (req, res) => {};
+export const addPosts = (req, res) => {
+  // TODO CHECK USER WHETHER LOG IN
+  // console.log(req.body);
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).json("Not Authenticated");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(401).json("Token is not valid");
+
+    const postQuery =
+      "INSERT INTO posts (`userid`, `title`, `description`, `postImg`,`date`) VALUES (?)";
+    const tagQuery = "INSERT INTO tags (`name`) VALUES (?)";
+    const postTagsQuery =
+      "INSERT INTO postTags (`post_id`, `tag_id`) VALUES ((SELECT `id` FROM posts WHERE `userid` = ? AND `title` = ?), (SELECT `id` FROM tags WHERE `name` = ?))";
+
+    const values = [
+      userInfo.id,
+      req.body.title,
+      req.body.description,
+      req.body.img,
+      req.body.date,
+    ];
+
+    db.query(postQuery, [values], (err, postResult) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json("Error inserting into posts");
+      }
+
+      const tags = req.body.tags || [];
+      // console.log({ postResult });
+      if (tags.length === 0) {
+        return res
+          .status(200)
+          .json("Successfully inserted into posts (no tags)");
+      }
+
+      const insertTagsAndPostTags = () => {
+        let completedTags = 0;
+
+        for (const tag of tags) {
+          // Insert into tags
+          db.query(tagQuery, [tag], (err, tagResult) => {
+            if (err) {
+              console.error(err);
+              return res
+                .status(500)
+                .json(`Error inserting into tags for tag '${tag}'`);
+            }
+
+            // console.log({ tagResult });
+            // Insert into postTags
+            db.query(
+              postTagsQuery,
+              [userInfo.id, req.body.title, tag],
+              (err, postTagsResult) => {
+                if (err) {
+                  console.error(err);
+                  return res.status(500).json("Error inserting into postTags");
+                }
+
+                completedTags++;
+
+                if (completedTags === tags.length) {
+                  // All tags have been processed
+                  // console.log({ postTagsResult });
+                  res
+                    .status(200)
+                    .json(
+                      "Successfully inserted into posts, tags, and postTags"
+                    );
+                }
+              }
+            );
+          });
+        }
+      };
+
+      insertTagsAndPostTags();
+    });
+  });
+};
 
 export const editPost = (req, res) => {};
 

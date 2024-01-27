@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import "./write.scss";
 import { DarkModeContext } from "../../context/createContext";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -10,6 +11,9 @@ import Typography from "@mui/material/Typography";
 import imagePreview from "../../resource/placeholder.jpeg";
 import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "../../components/textEditor/TextEditor";
+import axios from "axios";
+import moment from "moment";
+import DOMPurify from "dompurify";
 
 const steps = ["Setup", "Write", "Publish"];
 
@@ -17,18 +21,25 @@ const Write = () => {
   const { currentMode } = useContext(DarkModeContext);
   const [activeStep, setActiveStep] = React.useState(0);
   const [title, setTitle] = useState("");
-  const [file, setFile] = useState(imagePreview);
-  const handleChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setFile(URL.createObjectURL(file));
+  const [content, setContent] = useState("");
+  const [file, setFile] = useState();
+
+  const navigate = useNavigate();
+
+  const upload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post("/upload", formData);
+      return res.data;
+    } catch (err) {
+      console.log(err);
     }
   };
 
   // TODO TAGS FUNCTION START
   const [tags, setTags] = useState([]);
   const handleKeyDown = (event) => {
-    console.log(event);
     if (event.key === "Enter") {
       setTags([...tags, event.target.value.trim()]);
       event.target.value = "";
@@ -40,14 +51,11 @@ const Write = () => {
     setTags(newTags);
   };
   // TODO TAGS FUNCTION END
-
   // TODO TEXT EDITOR FUNCTION START
-  const [content, setContent] = useState("");
   const handleEditorChange = (value) => {
     setContent(value);
   };
   // TODO TEXT EDITOR FUNCTION END
-
   const handleNext = () => {
     window.scrollTo(0, 0);
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -56,8 +64,19 @@ const Write = () => {
     window.scrollTo(0, 0);
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-  const handleReset = () => {
-    setActiveStep(0);
+  const handleReset = async () => {
+    const imgUrl = await upload();
+    const dataPost = {
+      title: title,
+      description: content,
+      img: file ? imgUrl : "",
+      date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      tags: tags,
+    };
+
+    await axios.post("/posts", dataPost);
+    navigate("/");
+    // setActiveStep(0);
   };
 
   return (
@@ -112,12 +131,18 @@ const Write = () => {
                     <label
                       className="fileUpload"
                       style={{
-                        backgroundImage: `url(${file})`,
+                        backgroundImage: `url(${
+                          file ? URL.createObjectURL(file) : imagePreview
+                        })`,
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                       }}>
-                      <input type="file" name="file" onChange={handleChange} />
+                      <input
+                        type="file"
+                        name="file"
+                        onChange={(e) => setFile(e.target.files[0])}
+                      />
                     </label>
                   </div>
                   <div className="another">
@@ -158,45 +183,17 @@ const Write = () => {
               {activeStep === 2 && (
                 <div className="thirdStep">
                   <div className="imagePreview">
-                    <img src={file} alt="imagePreview" />
+                    <img
+                      src={file ? URL.createObjectURL(file) : imagePreview}
+                      alt="imagePreview"
+                    />
                   </div>
-                  <h1 className="title">Lorem ipsum doler sir amet</h1>
-                  <div className="content">
-                    Section 1.10.32 of "de Finibus Bonorum et Malorum", written
-                    by Cicero in 45 BC "Sed ut perspiciatis unde omnis iste
-                    natus error sit voluptatem accusantium doloremque
-                    laudantium, totam rem aperiam, eaque ipsa quae ab illo
-                    inventore veritatis et quasi architecto beatae vitae dicta
-                    sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                    aspernatur aut odit aut fugit, sed quia consequuntur magni
-                    dolores eos qui ratione voluptatem sequi nesciunt. Neque
-                    porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                    consectetur, adipisci velit, sed quia non numquam eius modi
-                    tempora incidunt ut labore et dolore magnam aliquam quaerat
-                    voluptatem. Ut enim ad minima veniam, quis nostrum
-                    exercitationem ullam corporis suscipit laboriosam, nisi ut
-                    aliquid ex ea commodi consequatur? Quis autem vel eum iure
-                    reprehenderit qui in ea voluptate velit esse quam nihil
-                    molestiae consequatur, vel illum qui dolorem eum fugiat quo
-                    voluptas nulla pariatur?" 1914 translation by H. Rackham
-                    "But I must explain to you how all this mistaken idea of
-                    denouncing pleasure and praising pain was born and I will
-                    give you a complete account of the system, and expound the
-                    actual teachings of the great explorer of the truth, the
-                    master-builder of human happiness. No one rejects, dislikes,
-                    or avoids pleasure itself, because it is pleasure, but
-                    because those who do not know how to pursue pleasure
-                    rationally encounter consequences that are extremely
-                    painful. Nor again is there anyone who loves or pursues or
-                    desires to obtain pain of itself, because it is pain, but
-                    because occasionally circumstances occur in which toil and
-                    pain can procure him some great pleasure. To take a trivial
-                    example, which of us ever undertakes laborious physical
-                    exercise, except to obtain some advantage from it? But who
-                    has any right to find fault with a man who chooses to enjoy
-                    a pleasure that has no annoying consequences, or one who
-                    avoids a pain that produces no resultant pleasure?"
-                  </div>
+                  <h1 className="title">{title}</h1>
+                  <div
+                    className="content"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(content),
+                    }}></div>
                 </div>
               )}
             </Typography>

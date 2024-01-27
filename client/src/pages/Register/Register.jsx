@@ -17,7 +17,7 @@ import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
 const defaultTheme = createTheme();
 
 export default function Register() {
-  const baseUrl = process.env.REACT_APP_BASE_URL;
+  // const baseUrl = process.env.REACT_APP_BASE_URL;
   const [error, setError] = useState("");
 
   const navigate = useNavigate();

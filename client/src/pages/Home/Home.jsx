@@ -4,6 +4,7 @@ import { DarkModeContext } from "../../context/createContext";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
+import DOMPurify from "dompurify";
 
 const Home = () => {
   const { currentMode } = useContext(DarkModeContext);
@@ -24,7 +25,7 @@ const Home = () => {
     };
 
     fetchData();
-  }, [search]);
+  }, [search, dataPosts]);
 
   // const posts = [
   //   {
@@ -63,11 +64,14 @@ const Home = () => {
             ))}
           {dataPosts?.map((post) => (
             <div className="post" key={post.id}>
-              <img src={post.postImg} alt={post.title} />
+              <img src={`../upload/${post.postImg}`} alt={post.title} />
               <Link className="title" to={`/readme/${post.id}`}>
                 {post.title}
               </Link>
-              <p>{post.description}</p>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(post.description),
+                }}></div>
               <Link to={`/readme/${post.id}`} className="button">
                 Read more
               </Link>
