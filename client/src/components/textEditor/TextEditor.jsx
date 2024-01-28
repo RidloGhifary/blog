@@ -22,7 +22,7 @@ TextEditor.modules = {
     ["bold", "italic", "underline", "strike", "blockquote"],
     [{ color: [] }, { background: [] }],
     [{ script: "sub" }, { script: "super" }],
-    ["link", "image", "video"],
+    ["link"],
     [
       { list: "ordered" },
       { list: "bullet" },
@@ -46,8 +46,6 @@ TextEditor.formats = [
   "background",
   "script",
   "link",
-  "image",
-  "video",
   "list",
   "bullet",
   "indent",

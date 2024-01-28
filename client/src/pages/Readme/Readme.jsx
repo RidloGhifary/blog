@@ -99,7 +99,7 @@ const Readme = () => {
           <p>
             {postDataComments
               ? `${postDataComments.length} comment${
-                  postDataComments.length > 1 && "s"
+                  postDataComments.length > 1 ? "s" : ""
                 }`
               : "There is no comment yet"}
           </p>

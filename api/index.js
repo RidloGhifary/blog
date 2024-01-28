@@ -12,11 +12,13 @@ app.use(cookieParser());
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../client/src/publicAssets");
+    cb(null, "../client/public/upload");
   },
   filename: function (req, file, cb) {
+    const originalname = file.originalname;
+    const sanitizedFilename = originalname.replace(/\s+/g, "_");
     const uniqueSuffix = Date.now();
-    cb(null, uniqueSuffix + file.originalname);
+    cb(null, uniqueSuffix + sanitizedFilename);
   },
 });
 const upload = multer({ storage });

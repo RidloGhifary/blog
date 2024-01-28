@@ -9,11 +9,14 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import imagePreview from "../../resource/placeholder.jpeg";
-import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "../../components/textEditor/TextEditor";
 import axios from "axios";
 import moment from "moment";
 import DOMPurify from "dompurify";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const steps = ["Setup", "Write", "Publish"];
 
@@ -22,8 +25,8 @@ const Write = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
   const [file, setFile] = useState();
-
   const navigate = useNavigate();
 
   const upload = async () => {
@@ -36,21 +39,6 @@ const Write = () => {
       console.log(err);
     }
   };
-
-  // TODO TAGS FUNCTION START
-  const [tags, setTags] = useState([]);
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      setTags([...tags, event.target.value.trim()]);
-      event.target.value = "";
-    }
-  };
-
-  const handleDeleteTags = (index) => {
-    const newTags = tags.filter((_, i) => i !== index);
-    setTags(newTags);
-  };
-  // TODO TAGS FUNCTION END
   // TODO TEXT EDITOR FUNCTION START
   const handleEditorChange = (value) => {
     setContent(value);
@@ -69,9 +57,9 @@ const Write = () => {
     const dataPost = {
       title: title,
       description: content,
-      img: file ? imgUrl : "",
+      img: imgUrl ? imgUrl : file,
       date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-      tags: tags,
+      category: category,
     };
 
     await axios.post("/posts", dataPost);
@@ -153,25 +141,24 @@ const Write = () => {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
-                    <div className="tagsContainer">
-                      <input
-                        type="text"
-                        placeholder="Tags"
-                        disabled={tags.length >= 5}
-                        onKeyDown={handleKeyDown}
-                      />
-                      <div className="tags">
-                        {tags?.map((tag, index) => (
-                          <span className="tag" key={index}>
-                            #{tag}
-                            <CloseIcon
-                              className="delete"
-                              onClick={() => handleDeleteTags(index)}
-                            />
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                    <FormControl
+                      fullWidth
+                      sx={{ m: 1, minWidth: 120 }}
+                      size="small"
+                      className="formSelect">
+                      <InputLabel id="demo-select-small-label">
+                        Category
+                      </InputLabel>
+                      <Select
+                        labelId="demo-select-small-label"
+                        id="demo-select-small"
+                        label="Category"
+                        onChange={(e) => setCategory(e.target.value)}>
+                        <MenuItem value={"programming"}>Programming</MenuItem>
+                        <MenuItem value={"design"}>Design</MenuItem>
+                        <MenuItem value={"technology"}>Technology</MenuItem>
+                      </Select>
+                    </FormControl>
                   </div>
                 </div>
               )}

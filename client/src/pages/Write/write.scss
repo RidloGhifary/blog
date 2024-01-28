@@ -61,56 +61,8 @@
         }
       }
 
-      .tagsContainer {
-        margin: 20px 0;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-
-        input[type="text"] {
-          width: 100%;
-          background-color: transparent;
-          outline: none;
-          border: none;
-          border: 2px solid $primaryColor;
-          padding: 20px;
-          @include borderRadius(8px);
-
-          &:disabled {
-            border: 2px solid gray;
-            color: gray;
-          }
-        }
-
-        .tags {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 10px;
-
-          span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            background-color: $primaryColor;
-            color: white;
-            padding: 6px 18px;
-            font-weight: 500;
-            @include borderRadius(50px);
-
-            .delete {
-              color: $primaryColor;
-              background-color: rgb(255, 255, 255);
-              padding: 4px;
-              @include borderRadius(50px);
-
-              &:hover {
-                background-color: rgb(222, 222, 222);
-              }
-            }
-          }
-        }
+      .formSelect {
+        margin-top: 30px;
       }
     }
 
@@ -195,25 +147,6 @@
         &::placeholder {
           color: white;
           text-align: center;
-        }
-      }
-
-      .tagsContainer {
-        input[type="text"] {
-          border: 2px solid white;
-          color: white;
-          &::placeholder {
-            color: white;
-          }
-          &:disabled {
-            border: 2px solid gray;
-            color: gray;
-            cursor: no-drop;
-
-            &::placeholder {
-              color: gray;
-            }
-          }
         }
       }
     }
