@@ -130,7 +130,18 @@
           color: white;
           font-weight: 600;
           cursor: pointer;
+          border: 1px solid $primaryColor;
           @include borderRadius(8px);
+
+          &:hover {
+            @include buttonHover();
+          }
+        }
+
+        button[disabled] {
+          background-color: rgba(0, 114, 114, 0.3);
+          color: rgb(193, 193, 193);
+          cursor: not-allowed;
         }
 
         @include apply-styles(medium) {
@@ -142,9 +153,11 @@
       }
 
       .listComments {
+        display: flex;
+        flex-direction: column;
+        // gap: 8px;
+        margin: 20px 0;
         .userComment {
-          padding: 10px;
-          margin: 20px 0;
           display: flex;
           gap: 15px;
           img {

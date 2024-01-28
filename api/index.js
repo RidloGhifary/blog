@@ -1,6 +1,7 @@
 import express from "express";
 import authRouter from "./router/auth.js";
 import postsRouter from "./router/posts.js";
+import commentsRouter from "./router/comments.js";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 
@@ -25,6 +26,7 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
 
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/comments", commentsRouter);
 
 app.get("/", (req, res) => {
   res.send("Server Connected");

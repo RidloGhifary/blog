@@ -2,17 +2,36 @@ import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { DarkModeContext } from "../../context/createContext";
 import "./readme.scss";
-import Image from "../../resource/ganjar.jpeg";
+// import Image from "../../resource/ganjar.jpeg";
 import Image2 from "../../resource/placeholder.jpeg";
 import axios from "axios";
 import DOMPurify from "dompurify";
 import moment from "moment";
+import Alert from "@mui/material/Alert";
 
 const Readme = () => {
   const [postData, setPostData] = useState({});
+  const [postDataComments, setPostDataComments] = useState([]);
+  const [comment, setComment] = useState("");
   const { currentUser } = useContext(DarkModeContext);
   const { pathname } = useLocation();
   const location = pathname.split("/")[2];
+
+  const handleComment = async (e) => {
+    e.preventDefault();
+    const commentData = {
+      commentId: postData?.id || location,
+      comment: comment,
+      commentDate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+    };
+
+    await axios.post("/comments", commentData);
+    setComment("");
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +41,16 @@ const Readme = () => {
     };
     fetchData();
   }, [location, postData]);
+
+  useEffect(() => {
+    const fetchDataComment = async () => {
+      const res = await axios.get(`/comments/${location}`);
+      setPostDataComments(res.data);
+      // console.log(res.data);
+    };
+
+    fetchDataComment();
+  }, [postDataComments, location]);
 
   const { currentMode } = useContext(DarkModeContext);
   return (
@@ -67,26 +96,46 @@ const Readme = () => {
               <p>{currentUser.username}</p>
             </div>
           )}
-          <p>10 comments</p>
+          <p>
+            {postDataComments
+              ? `${postDataComments.length} comment${
+                  postDataComments.length > 1 && "s"
+                }`
+              : "There is no comment yet"}
+          </p>
           <form className="formComment">
-            <input type="text" placeholder="Your Comment" />
-            <button>Submit</button>
+            <input
+              type="text"
+              placeholder="Your Comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <button
+              disabled={currentUser ? false : true}
+              onClick={handleComment}>
+              Submit
+            </button>
           </form>
 
           <div className="listComments">
-            <div className="userComment">
-              <img src={Image} alt="userImage" />
-              <div className="commentInfo">
-                <div className="userCommentInfo">
-                  <span className="name">John Doe</span>
-                  <span className="date">1 hari yang lalu</span>
+            {postDataComments ? (
+              postDataComments?.map((data) => (
+                <div className="userComment" key={data.id}>
+                  <img src={data.img} alt={data.username} />
+                  <div className="commentInfo">
+                    <div className="userCommentInfo">
+                      <span className="name">@{data.username}</span>
+                      <span className="date">
+                        {moment(data.commentDate).fromNow()}
+                      </span>
+                    </div>
+                    <p className="comment">{data.comment}</p>
+                  </div>
                 </div>
-                <p className="comment">
-                  Generate Lorem Ipsum placeholder text. Select the number of
-                  characters, words, sentences or paragraphs, and hit generate!
-                </p>
-              </div>
-            </div>
+              ))
+            ) : (
+              <Alert severity="info">There is no comment yet</Alert>
+            )}
           </div>
         </div>
       </div>
