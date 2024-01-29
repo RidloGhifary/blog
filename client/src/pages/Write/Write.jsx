@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "./write.scss";
 import { DarkModeContext } from "../../context/createContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -28,6 +28,14 @@ const Write = () => {
   const [category, setCategory] = useState("");
   const [file, setFile] = useState();
   const navigate = useNavigate();
+  const { state } = useLocation();
+
+  // console.log({
+  //   title: title ? title : state.title,
+  //   description: content ? content : state.description,
+  //   img: state.postImg,
+  //   category: category,
+  // });
 
   const upload = async () => {
     try {
@@ -62,8 +70,19 @@ const Write = () => {
       category: category,
     };
 
-    await axios.post("/posts", dataPost);
-    navigate("/");
+    try {
+      state
+        ? await axios.put(`/posts/${state.id}`, {
+            title: title ? title : state.title,
+            description: content ? content : state.description,
+            img: imgUrl ? imgUrl : state ? state.postImg : file,
+            category: category ? category : state.category,
+          })
+        : await axios.post("/posts", dataPost);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
     // setActiveStep(0);
   };
 
@@ -120,7 +139,11 @@ const Write = () => {
                       className="fileUpload"
                       style={{
                         backgroundImage: `url(${
-                          file ? URL.createObjectURL(file) : imagePreview
+                          file
+                            ? URL.createObjectURL(file)
+                            : state
+                            ? `../upload/${state.postImg}`
+                            : imagePreview
                         })`,
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
@@ -129,6 +152,7 @@ const Write = () => {
                       <input
                         type="file"
                         name="file"
+                        required
                         onChange={(e) => setFile(e.target.files[0])}
                       />
                     </label>
@@ -138,7 +162,8 @@ const Write = () => {
                       type="text"
                       placeholder="Title"
                       className="inputTitle"
-                      value={title}
+                      required
+                      value={title ? title : state.title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
                     <FormControl
@@ -153,6 +178,7 @@ const Write = () => {
                         labelId="demo-select-small-label"
                         id="demo-select-small"
                         label="Category"
+                        required
                         onChange={(e) => setCategory(e.target.value)}>
                         <MenuItem value={"programming"}>Programming</MenuItem>
                         <MenuItem value={"design"}>Design</MenuItem>
@@ -164,22 +190,33 @@ const Write = () => {
               )}
               {activeStep === 1 && (
                 <div className="secondStep">
-                  <TextEditor value={content} onChange={handleEditorChange} />
+                  <TextEditor
+                    value={content ? content : state.description}
+                    onChange={handleEditorChange}
+                  />
                 </div>
               )}
               {activeStep === 2 && (
                 <div className="thirdStep">
                   <div className="imagePreview">
                     <img
-                      src={file ? URL.createObjectURL(file) : imagePreview}
+                      src={
+                        file
+                          ? URL.createObjectURL(file)
+                          : state
+                          ? `../upload/${state.postImg}`
+                          : imagePreview
+                      }
                       alt="imagePreview"
                     />
                   </div>
-                  <h1 className="title">{title}</h1>
+                  <h1 className="title">{title ? title : state.title}</h1>
                   <div
                     className="content"
                     dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(content),
+                      __html: DOMPurify.sanitize(
+                        state ? content : state.description
+                      ),
                     }}></div>
                 </div>
               )}

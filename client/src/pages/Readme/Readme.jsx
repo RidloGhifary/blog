@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { DarkModeContext } from "../../context/createContext";
 import "./readme.scss";
 // import Image from "../../resource/ganjar.jpeg";
@@ -63,7 +63,7 @@ const Readme = () => {
           />
         </div>
         <div className="writer">
-          <img src={postData.writerImg} alt="writerPhoto" />
+          <img src={postData?.writerImg} alt="writerPhoto" />
           <div className="writerInfo">
             <p className="username">{postData.writername}</p>
             <p className="date">Published {moment(postData.date).fromNow()}</p>
@@ -74,7 +74,12 @@ const Readme = () => {
               style={{
                 display: currentUser.id === postData.userid ? "flex" : "none",
               }}>
-              <button className="edit">Edit</button>
+              <Link
+                to={`/write?edit=${location}`}
+                state={postData}
+                className="edit">
+                Edit
+              </Link>
               <button className="delete">Delete</button>
             </div>
           )}

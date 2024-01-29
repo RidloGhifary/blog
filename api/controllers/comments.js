@@ -33,7 +33,7 @@ export const addComment = (req, res) => {
 
 export const getComment = (req, res) => {
   const q =
-    "SELECT comments.*, users.username, users.img, users.id FROM comments JOIN users WHERE userIdComment = users.id AND commentId = ? ORDER BY comments.commentDate";
+    "SELECT comments.*, users.username, users.img, users.id FROM comments JOIN users WHERE userIdComment = users.id AND commentId = ? ORDER BY comments.commentDate DESC";
 
   db.query(q, [req.params.id], (err, data) => {
     if (err) {
