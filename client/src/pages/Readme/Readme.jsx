@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/createContext";
 import "./readme.scss";
 // import Image from "../../resource/ganjar.jpeg";
@@ -8,12 +8,14 @@ import axios from "axios";
 import DOMPurify from "dompurify";
 import moment from "moment";
 import Alert from "@mui/material/Alert";
+import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
 
 const Readme = () => {
   const [postData, setPostData] = useState({});
   const [postDataComments, setPostDataComments] = useState([]);
   const [comment, setComment] = useState("");
   const { currentUser } = useContext(DarkModeContext);
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const location = pathname.split("/")[2];
 
@@ -27,6 +29,23 @@ const Readme = () => {
 
     await axios.post("/comments", commentData);
     setComment("");
+  };
+
+  const handleDeletePost = async () => {
+    try {
+      await axios.delete(`/posts/${location}`);
+      navigate("/");
+      ToastSuccess.fire({
+        icon: "success",
+        title: "Success deleted post",
+      });
+    } catch (err) {
+      ToastSuccess.fire({
+        icon: "error",
+        title: "Delete post failed",
+      });
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -80,7 +99,9 @@ const Readme = () => {
                 className="edit">
                 Edit
               </Link>
-              <button className="delete">Delete</button>
+              <button className="delete" onClick={handleDeletePost}>
+                Delete
+              </button>
             </div>
           )}
         </div>
