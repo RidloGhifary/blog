@@ -32,16 +32,29 @@
           font-size: 38px;
           font-weight: 800;
           margin: 10px 0;
+          text-overflow: ellipsis;
+          margin-bottom: 20px;
 
           @include apply-styles(small) {
             font-size: 30px;
           }
         }
 
+        .contentHome {
+          line-height: 25px;
+          margin-bottom: 20px;
+          height: 20px;
+          overflow: hidden;
+        }
+
         p {
           color: $primaryBlack;
           line-height: 25px;
-          margin-bottom: 20px;
+          margin-bottom: 30px;
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
 
           @include apply-styles(small) {
             font-size: 14px;

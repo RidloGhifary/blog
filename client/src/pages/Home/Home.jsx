@@ -4,7 +4,7 @@ import { DarkModeContext } from "../../context/createContext";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
-import DOMPurify from "dompurify";
+// import DOMPurify from "dompurify";
 
 const Home = () => {
   const { currentMode } = useContext(DarkModeContext);
@@ -68,10 +68,11 @@ const Home = () => {
               <Link className="title" to={`/readme/${post.id}`}>
                 {post.title}
               </Link>
-              <div
+              {/* <div
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(post.description),
-                }}></div>
+                }}
+                className="contentHome"></div> */}
               <Link to={`/readme/${post.id}`} className="button">
                 Read more
               </Link>

@@ -63,6 +63,12 @@
 
       .formSelect {
         margin-top: 30px;
+        width: 100%;
+        padding: 15px;
+        outline: none;
+        @include borderRadius(8px);
+        background-color: transparent;
+        border: 2px solid $primaryColor;
       }
     }
 
@@ -148,6 +154,10 @@
           color: white;
           text-align: center;
         }
+      }
+      .formSelect {
+        border: 2px solid white;
+        color: white;
       }
     }
   }

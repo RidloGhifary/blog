@@ -13,29 +13,18 @@ import TextEditor from "../../components/textEditor/TextEditor";
 import axios from "axios";
 import moment from "moment";
 import DOMPurify from "dompurify";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 
 const steps = ["Setup", "Write", "Publish"];
 
 const Write = () => {
+  const { state } = useLocation();
   const { currentMode } = useContext(DarkModeContext);
   const [activeStep, setActiveStep] = React.useState(0);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState(state?.title || "");
+  const [content, setContent] = useState(state?.description || "");
+  const [category, setCategory] = useState(state?.category || "");
   const [file, setFile] = useState();
   const navigate = useNavigate();
-  const { state } = useLocation();
-
-  // console.log({
-  //   title: title ? title : state.title,
-  //   description: content ? content : state.description,
-  //   img: state.postImg,
-  //   category: category,
-  // });
 
   const upload = async () => {
     try {
@@ -73,10 +62,10 @@ const Write = () => {
     try {
       state
         ? await axios.put(`/posts/${state.id}`, {
-            title: title ? title : state.title,
-            description: content ? content : state.description,
+            title: title,
+            description: content,
             img: imgUrl ? imgUrl : state ? state.postImg : file,
-            category: category ? category : state.category,
+            category: category,
           })
         : await axios.post("/posts", dataPost);
       navigate("/");
@@ -163,10 +152,19 @@ const Write = () => {
                       placeholder="Title"
                       className="inputTitle"
                       required
-                      value={title ? title : state.title}
+                      value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
-                    <FormControl
+                    <select
+                      name="category"
+                      className="formSelect"
+                      required
+                      onChange={(e) => setCategory(e.target.value)}>
+                      <option value={"programming"}>Programming</option>
+                      <option value={"design"}>Design</option>
+                      <option value={"technology"}>Technology</option>
+                    </select>
+                    {/* <FormControl
                       fullWidth
                       sx={{ m: 1, minWidth: 120 }}
                       size="small"
@@ -184,16 +182,13 @@ const Write = () => {
                         <MenuItem value={"design"}>Design</MenuItem>
                         <MenuItem value={"technology"}>Technology</MenuItem>
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
                   </div>
                 </div>
               )}
               {activeStep === 1 && (
                 <div className="secondStep">
-                  <TextEditor
-                    value={content ? content : state.description}
-                    onChange={handleEditorChange}
-                  />
+                  <TextEditor value={content} onChange={handleEditorChange} />
                 </div>
               )}
               {activeStep === 2 && (
@@ -210,13 +205,11 @@ const Write = () => {
                       alt="imagePreview"
                     />
                   </div>
-                  <h1 className="title">{title ? title : state.title}</h1>
+                  <h1 className="title">{title}</h1>
                   <div
                     className="content"
                     dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(
-                        state ? content : state.description
-                      ),
+                      __html: DOMPurify.sanitize(content),
                     }}></div>
                 </div>
               )}

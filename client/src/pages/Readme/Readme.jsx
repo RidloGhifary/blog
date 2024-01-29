@@ -85,17 +85,21 @@ const Readme = () => {
     fetchDataComment();
   }, [postDataComments, location]);
 
-  console.log(postDataComments);
+  // console.log(postDataComments);
 
   const { currentMode } = useContext(DarkModeContext);
   return (
     <div className={`readme ${currentMode && "dark"}`}>
       <div className="readmeContainer">
         <div className="imageContainer">
-          <img
-            src={`../upload/${postData.postImg}` || Image2}
-            alt="imageContainer"
-          />
+          {!postData.postImg ? (
+            <Alert severity="info">Wait a minute</Alert>
+          ) : (
+            <img
+              src={`../upload/${postData.postImg}` || Image2}
+              alt="imageContainer"
+            />
+          )}
         </div>
         <div className="writer">
           <img src={postData?.writerImg} alt="writerPhoto" />
