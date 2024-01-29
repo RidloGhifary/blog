@@ -33,7 +33,7 @@ export const addComment = (req, res) => {
 
 export const getComment = (req, res) => {
   const q =
-    "SELECT comments.*, users.username, users.img, users.id FROM comments JOIN users WHERE userIdComment = users.id AND commentId = ? ORDER BY comments.commentDate DESC";
+    "SELECT comments.*, users.username, users.img, users.id AS userId FROM comments JOIN users WHERE userIdComment = users.id AND commentId = ? ORDER BY comments.commentDate DESC";
 
   db.query(q, [req.params.id], (err, data) => {
     if (err) {
@@ -44,5 +44,22 @@ export const getComment = (req, res) => {
     // const { password, ...others } = data;
     // console.log(data);
     return res.status(200).json(data);
+  });
+};
+
+export const deleteComment = (req, res) => {
+  const token = req.cookies.access_token;
+  if (!token) res.status(402).json("Not Authenticated");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(500).json("Token is not valid");
+
+    const q = "DELETE FROM comments WHERE `id` = ? AND `userIdComment` = ?";
+
+    db.query(q, [req.params.id, userInfo.id], (err, data) => {
+      if (err) return res.status(500).json("Server Error");
+
+      return res.status(200).json("Success delete comment");
+    });
   });
 };

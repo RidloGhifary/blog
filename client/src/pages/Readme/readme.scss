@@ -159,31 +159,38 @@
         margin: 20px 0;
         .userComment {
           display: flex;
-          gap: 15px;
-          img {
-            width: 50px;
-            height: 50px;
-            @include borderRadius(50px);
-            object-fit: cover;
-            object-position: center;
+          justify-content: space-between;
+          .containerComment {
+            display: flex;
+            gap: 15px;
+            img {
+              width: 50px;
+              height: 50px;
+              @include borderRadius(50px);
+              object-fit: cover;
+              object-position: center;
+            }
+            .commentInfo {
+              .userCommentInfo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                .name {
+                  font-weight: 600;
+                  font-size: 18px;
+                }
+                .date {
+                  color: gray;
+                  font-size: 12px;
+                }
+              }
+              .comment {
+                margin-top: 10px;
+              }
+            }
           }
-          .commentInfo {
-            .userCommentInfo {
-              display: flex;
-              align-items: center;
-              gap: 8px;
-              .name {
-                font-weight: 600;
-                font-size: 18px;
-              }
-              .date {
-                color: gray;
-                font-size: 12px;
-              }
-            }
-            .comment {
-              margin-top: 10px;
-            }
+          .deleteButton {
+            cursor: pointer;
           }
         }
       }

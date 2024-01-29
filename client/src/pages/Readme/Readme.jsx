@@ -9,6 +9,7 @@ import DOMPurify from "dompurify";
 import moment from "moment";
 import Alert from "@mui/material/Alert";
 import { ToastSuccess } from "../../components/sweetAlert/sweetAlert";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Readme = () => {
   const [postData, setPostData] = useState({});
@@ -48,6 +49,19 @@ const Readme = () => {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    console.log(commentId);
+    try {
+      await axios.delete(`/comments/${commentId}`);
+    } catch (err) {
+      ToastSuccess.fire({
+        icon: "error",
+        title: "Delete post failed",
+      });
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, []);
@@ -70,6 +84,8 @@ const Readme = () => {
 
     fetchDataComment();
   }, [postDataComments, location]);
+
+  console.log(postDataComments);
 
   const { currentMode } = useContext(DarkModeContext);
   return (
@@ -147,16 +163,28 @@ const Readme = () => {
             {postDataComments ? (
               postDataComments?.map((data) => (
                 <div className="userComment" key={data.id}>
-                  <img src={data.img} alt={data.username} />
-                  <div className="commentInfo">
-                    <div className="userCommentInfo">
-                      <span className="name">@{data.username}</span>
-                      <span className="date">
-                        {moment(data.commentDate).fromNow()}
-                      </span>
+                  <div className="containerComment">
+                    <img src={data.img} alt={data.username} />
+                    <div className="commentInfo">
+                      <div className="userCommentInfo">
+                        <span className="name">@{data.username}</span>
+                        <span className="date">
+                          {moment(data.commentDate).fromNow()}
+                        </span>
+                      </div>
+                      <p className="comment">{data.comment}</p>
                     </div>
-                    <p className="comment">{data.comment}</p>
                   </div>
+                  <DeleteIcon
+                    className="deleteButton"
+                    onClick={() => handleDeleteComment(data.id)}
+                    style={{
+                      display:
+                        currentUser.id === data.userIdComment
+                          ? "block"
+                          : "none",
+                    }}
+                  />
                 </div>
               ))
             ) : (
